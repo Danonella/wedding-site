@@ -61,42 +61,38 @@ body::after{opacity:.18; filter:blur(2px)}
 .mt-2{margin-top:.5rem} .mt-3{margin-top:.75rem} .mt-4{margin-top:1rem} .mt-6{margin-top:1.5rem}
 .mt-8{margin-top:2rem} .mb-6{margin-bottom:1.5rem}
 
-/* ——— HERO: фото крупно, до правого края, без горизонтального скролла ——— */
-.hero-right-edge{
-  position: relative;
-  overflow-x: hidden;  /* страховка от «расширения» */
+/* === HERO: фото крупно, до правого края, без горизонтального скролла === */
+.hero-right-edge{ position:relative; overflow:hidden; }
+
+/* Контейнер с текстом всегда сверху */
+.hero-right-edge .container{ position:relative; z-index:2; }
+
+/* Фото как отдельный слой, прижато к правому краю секции */
+.hero-photo-bleed{
+  position:absolute;
+  top:0; right:0; bottom:0;
+  display:flex; align-items:flex-end; /* картинка "стоит" на нижней линии секции */
+  z-index:1;
+  pointer-events:none; /* чтобы клики не перехватывало */
 }
 
-/* Текст остаётся в контейнере, фото выносим поверх лэйаута на правый край */
-.hero-right-edge .hero-grid{
-  position: relative;
-  z-index: 2; /* текст над фото */
+/* КРУПНОСТЬ фото: регулируешь двумя числами — 56vw и 820px */
+.hero-photo-bleed img{
+  width:min(56vw, 820px);   /* больше = ближе к центру */
+  height:auto;
+  display:block;
+  object-fit:cover;
+  border-top-left-radius:60px; /* твой уголок */
 }
 
-/* Фото фиксируем к правому краю в пределах секции */
-.hero-right-edge .hero-photo{
-  position: absolute;
-  right: 0;
-  bottom: 0;            /* можно сделать top: 0; если нужно выровнять по верху */
-  margin: 0;
-  z-index: 1;
-}
-
-/* Размер: увеличивай/уменьшай двумя числами: 58vw и 780px */
-.hero-right-edge .hero-photo img{
-  width: min(58vw, 780px);  /* сделай 60vw/820px, если хочется ещё крупнее */
-  height: auto;
-  display: block;
-  object-fit: cover;
-}
-
-/* На мобильных возвращаем обычный поток, чтобы всё было аккуратно по ширине */
+/* На мобилках фото просто идёт потоком, на всю ширину */
 @media (max-width: 899px){
-  .hero-right-edge .hero-photo{
-    position: static;
-    margin-top: 16px;
+  .hero-photo-bleed{
+    position:static;
+    display:block;
+    margin:16px 20px 0; /* отступы как у контейнера */
   }
-  .hero-right-edge .hero-photo img{
-    width: 100%;
+  .hero-photo-bleed img{
+    width:100%;
   }
 }
