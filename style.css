@@ -1,108 +1,90 @@
-:root{
-  --peach:#f7c7b1; /* персиковый */
-  --blue:#a7cbff;  /* голубой */
-  --green:#93d1bf; /* зелёный */
-  --ink:#213043;   /* тёмный текст */
-  --paper:#fffdfb; /* тёплый фон */
-}
-/* Базовая типографика */
-html{scroll-behavior:smooth}
-body{
-  margin:0; color:var(--ink); background:var(--paper);
-  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans";
-  line-height:1.55;
-}
-.font-sans{font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans"}
-.font-display{font-family:"Libre Bodoni",serif}
+/* ====== БАЗА ====== */
 
-/* Акварельные края (очень деликатно, без картинок) */
-body::before, body::after{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.26;
-  background: radial-gradient(1000px 600px at 6% 0%, var(--peach)/28%, transparent 60%),
-              radial-gradient(900px 500px at 100% 20%, var(--blue)/24%, transparent 60%),
-              radial-gradient(1000px 650px at 50% 100%, var(--green)/20%, transparent 60%);
-}
-body::after{opacity:.18; filter:blur(2px)}
-
-/* Секции и контейнер */
-.section{padding:84px 0}
-@media(min-width:768px){ .section{padding:120px 0} }
-.container{width:100%; max-width:1200px; margin:0 auto; padding:0 20px}
-
-/* HERO */
-.hero-grid{display:grid; gap:28px; align-items:end}
-@media(min-width:900px){ .hero-grid{grid-template-columns:1.1fr .9fr} }
-.title{font-family:"Libre Bodoni",serif; font-weight:600; margin:0; font-size:clamp(36px,6vw,68px); line-height:1.05}
-.amp{color:rgba(0,0,0,.4)}
-.subtitle{margin:.6rem 0 0; font-size:clamp(18px,3.2vw,28px); opacity:.9}
-
-.hero-photo img{display:block; width:100%; height:auto; object-fit:cover}
-/* Скруглён только левый верхний угол — 60px */
-.photo-corner-tl-60{border-top-left-radius:60px; border-top-right-radius:0; border-bottom-right-radius:0; border-bottom-left-radius:0; overflow:hidden}
-
-/* Плавные появления */
-[data-reveal]{opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s ease}
-[data-reveal].in{opacity:1; transform:none}
-
-/* Плавающая кнопка RSVP (скрыта, пока не проскроллили) */
-.fab{position:fixed; right:16px; bottom:16px; display:inline-flex; align-items:center; justify-content:center;
-  padding:.8rem 1.1rem; background:var(--ink); color:#fff; border-radius:999px; text-decoration:none;
-  box-shadow:0 10px 25px rgba(0,0,0,.12); font-weight:600; letter-spacing:.02em;
-  transform:translateY(80px); opacity:0; transition:all .45s ease; z-index:60}
-.fab.show{transform:none; opacity:1}
-
-/* Декоративная верхняя «течь» — еле заметно */
-.wash-top{position:relative}
-.wash-top::before{content:""; position:absolute; left:0; right:0; top:-100px; height:260px; pointer-events:none; opacity:.18;
-  background: radial-gradient(60% 60% at 50% 40%, var(--blue)/22%, transparent 70%)}
-
-/* Утилиты отступов/центрирования, если понадобятся позже */
-.text-center{text-align:center}
-.mt-2{margin-top:.5rem} .mt-3{margin-top:.75rem} .mt-4{margin-top:1rem} .mt-6{margin-top:1.5rem}
-.mt-8{margin-top:2rem} .mb-6{margin-bottom:1.5rem}
-
-/* === HERO: фото крупно, до правого края, без горизонтального скролла === */
-.hero-right-edge{ position:relative; overflow:hidden; }
-
-/* Контейнер с текстом всегда сверху */
-.hero-right-edge .container{ position:relative; z-index:2; }
-
-/* Центрируем фото по вертикали внутри секции */
-.hero-photo-bleed{
-  position: absolute;
-  right: -8px;           /* можно 0 или -16px по вкусу */
-  top: 50%;
-  transform: translateY(-50%);  /* вертикальный центр */
-  z-index: 1;
-  pointer-events: none;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* ЖЁСТКАЯ регулировка размера фото — перекроет всё остальное */
-#heroPhoto{
-  width: min(50vw, 760px) !important; /* подстрой под себя: 46–55vw и 680–820px */
-  height: auto !important;
+body {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  background: #f8f5f0;
+  color: #3b2f2f;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
   display: block;
+}
+
+.section {
+  padding: 60px 0;
+}
+
+.container {
+  width: min(1200px, 90%);
+  margin: 0 auto;
+}
+
+/* ====== HERO ====== */
+
+.hero {
+  padding: clamp(60px, 14vh, 140px) 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr min(46vw, 720px);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+/* Текст слева */
+.title {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 600;
+  margin: 0 0 1.2rem 0;
+  letter-spacing: 0.04em;
+  font-size: clamp(48px, 8vw, 120px);
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.amp {
+  color: #b79e8e;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 30px);
+  opacity: 0.9;
+}
+
+/* Фото справа */
+.hero-photo {
+  margin: 0;
+}
+
+.hero-photo img {
+  width: 100%;
+  height: auto;
   object-fit: cover;
-  border-top-left-radius: 60px;
+  object-position: center 55%;
+  border-top-left-radius: 120px;
+  aspect-ratio: 16 / 11;
 }
 
-/* На мобилках фото просто идёт потоком, на всю ширину */
-@media (max-width: 899px){
-  .hero-photo-bleed{
-    position:static;
-    display:block;
-    margin:16px 20px 0; /* отступы как у контейнера */
+/* ====== МОБИЛКИ ====== */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
-  .hero-photo-bleed img{
-    width:100%;
+
+  .hero-photo img {
+    aspect-ratio: auto;
+    border-top-left-radius: 60px;
   }
 }
-
-/* Чтобы картинка не обрезалась по высоте секции */
-.hero{
-  min-height: 72vh;   /* можно 68–80vh по вкусу */
-}
-
-
-
-
