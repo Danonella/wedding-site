@@ -82,8 +82,9 @@ body::after{opacity:.18; filter:blur(2px)}
 
 /* Размер самого изображения */
 .hero-right-edge .hero-photo img{
-  width: min(48vw, 640px);
+  width: min(55vw, 720px);
   height: auto;
   display:block;
   object-fit: cover;
 }
+
