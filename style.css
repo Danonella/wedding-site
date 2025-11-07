@@ -67,22 +67,16 @@ body::after{opacity:.18; filter:blur(2px)}
 /* Контейнер с текстом всегда сверху */
 .hero-right-edge .container{ position:relative; z-index:2; }
 
-/* Фото как отдельный слой, прижато к правому краю секции */
-.hero-photo-bleed{
-  position:absolute;
-  top:0; right:0; bottom:0;
-  display:flex; align-items:flex-end; /* картинка "стоит" на нижней линии секции */
-  z-index:1;
-  pointer-events:none; /* чтобы клики не перехватывало */
-}
+/* Положение блока с фото (чуть «за край» для красоты) */
+.hero-photo-bleed{ right:-8px; }
 
-/* КРУПНОСТЬ фото: регулируешь двумя числами — 56vw и 820px */
-.hero-photo-bleed img{
-  width:min(42vw, 660px);   /* больше = ближе к центру */
-  height:auto;
-  display:block;
-  object-fit:cover;
-  border-top-left-radius:60px; /* твой уголок */
+/* ЖЁСТКАЯ регулировка размера фото — перекроет всё остальное */
+#heroPhoto{
+  width: min(50vw, 760px) !important; /* подстрой под себя: 46–55vw и 680–820px */
+  height: auto !important;
+  display: block;
+  object-fit: cover;
+  border-top-left-radius: 60px;
 }
 
 /* На мобилках фото просто идёт потоком, на всю ширину */
@@ -96,5 +90,6 @@ body::after{opacity:.18; filter:blur(2px)}
     width:100%;
   }
 }
+
 
 
