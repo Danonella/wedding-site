@@ -68,7 +68,7 @@ body::after{opacity:.18; filter:blur(2px)}
 .hero-right-edge .container{ position:relative; z-index:2; }
 
 /* Положение блока с фото (чуть «за край» для красоты) */
-.hero-photo-bleed{ right:-8px; }
+.hero-photo-bleed{ right:-2px; }
 
 /* ЖЁСТКАЯ регулировка размера фото — перекроет всё остальное */
 #heroPhoto{
@@ -90,6 +90,7 @@ body::after{opacity:.18; filter:blur(2px)}
     width:100%;
   }
 }
+
 
 
 
