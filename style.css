@@ -1,4 +1,4 @@
-/* ====== БАЗА ====== */
+/* --- БАЗА --- */
 
 *,
 *::before,
@@ -35,7 +35,7 @@ img {
   margin: 0 auto;
 }
 
-/* ====== HERO ====== */
+/* --- HERO --- */
 
 .hero {
   padding: clamp(48px, 14vh, 160px) 0 clamp(48px, 10vh, 140px);
@@ -154,7 +154,7 @@ img {
 }
 
 
-/* ====== МОБИЛКИ ====== */
+/* --- МОБИЛКИ --- */
 @media (max-width: 900px) {
   .hero-grid {
     grid-template-columns: 1fr;
