@@ -25,11 +25,25 @@ body {
   font-family: "Cormorant Garamond", serif;
   color: var(--c-deep);
   -webkit-font-smoothing: antialiased;
+  background-color: var(--c-soft);
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--c-aqua) 70%, #ffffff) 0, transparent 65%),
-    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--c-peach) 75%, #ffffff) 0, transparent 58%),
-    radial-gradient(circle at 12% 85%, color-mix(in srgb, var(--c-teal) 65%, transparent) 0, transparent 62%),
-    linear-gradient(180deg, color-mix(in srgb, var(--c-aqua) 55%, #ffffff) 0%, color-mix(in srgb, var(--c-peach) 45%, #ffffff) 100%);
+    radial-gradient(220px 320px at 12% 18%, color-mix(in srgb, var(--c-aqua) 30%, transparent) 0, transparent 100%),
+    radial-gradient(180px 260px at 78% 22%, color-mix(in srgb, var(--c-peach) 32%, transparent) 0, transparent 100%),
+    radial-gradient(240px 280px at 18% 78%, color-mix(in srgb, var(--c-teal) 26%, transparent) 0, transparent 100%),
+    radial-gradient(200px 240px at 88% 72%, color-mix(in srgb, var(--c-coral) 28%, transparent) 0, transparent 100%),
+    radial-gradient(220px 300px at 50% 52%, color-mix(in srgb, var(--c-lime) 22%, transparent) 0, transparent 100%);
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  z-index: -1;
 }
 
 img {
@@ -62,7 +76,7 @@ img {
 .hero {
   padding-top: clamp(48px, 12vh, 140px);
   padding-bottom: clamp(56px, 13vh, 180px);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--c-aqua) 75%, white) 0%, color-mix(in srgb, var(--c-teal) 55%, white) 48%, color-mix(in srgb, var(--c-peach) 45%, white) 100%);
+  background: none;
   position: relative;
   isolation: isolate;
 }
