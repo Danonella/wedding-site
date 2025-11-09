@@ -252,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (rsvp) {
     const submitBtn = rsvp.querySelector('button[type="submit"]');
     const feedbackEl = document.getElementById('rsvp-feedback');
+    const drinkInputs = Array.from(rsvp.querySelectorAll('input[name="drinks"]'));
+    const drinkNote = rsvp.querySelector('input[name="drinksNote"]');
 
     const syncPills = () => {
       rsvp.querySelectorAll('.choice-pill input[type="checkbox"]').forEach((input) => {
@@ -261,6 +263,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    const ensureDrinksValidity = () => {
+      if (!drinkInputs.length) return true;
+      const hasChoice = drinkInputs.some((input) => input.checked);
+      const noteValue = (drinkNote?.value || '').toString().trim();
+      const message = 'Выберите хотя бы один напиток или напишите свой вариант.';
+      const control = drinkInputs[0];
+      if (hasChoice || noteValue) {
+        control.setCustomValidity('');
+        return true;
+      }
+      control.setCustomValidity(message);
+      return false;
+    };
+
     rsvp.addEventListener('change', (ev) => {
       const target = ev.target;
       if (target instanceof HTMLInputElement && target.closest('.choice-pill')) {
@@ -268,10 +284,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pill) {
           pill.classList.toggle('is-selected', target.checked);
         }
+        ensureDrinksValidity();
+      }
+      if (target instanceof HTMLInputElement && target === drinkNote) {
+        ensureDrinksValidity();
       }
     });
 
+    drinkNote?.addEventListener('input', ensureDrinksValidity);
+
     syncPills();
+    ensureDrinksValidity();
+
     const gformUrl = rsvp.dataset.gform;
     const fieldMap = {
       name: 'entry.1768114812',
@@ -322,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     rsvp.addEventListener('submit', (ev) => {
       ev.preventDefault();
+      ensureDrinksValidity();
       if (!rsvp.reportValidity()) {
         return;
       }
@@ -340,10 +365,88 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           rsvp.reset();
           syncPills();
+          ensureDrinksValidity();
         })
         .catch((err) => {
           console.error('Не удалось отправить ответ в Google-форму', err);
           showFeedback(feedbackEl, 'Не получилось отправить ответ. Попробуйте ещё раз чуть позже.', true);
+        })
+        .finally(() => {
+          setSubmitting(false);
+        });
+    });
+  }
+
+  const wishes = document.querySelector('.wishes-form');
+  if (wishes) {
+    const submitBtn = wishes.querySelector('button[type="submit"]');
+    const feedbackEl = document.getElementById('wishes-feedback');
+    const wishField = wishes.querySelector('textarea[name="wish"]');
+    const gformUrl = wishes.dataset.gform;
+    const fieldMap = {
+      wish: 'entry.88530091'
+    };
+
+    const ensureWishValidity = () => {
+      if (!wishField) return true;
+      const raw = wishField.value;
+      const trimmed = raw.trim();
+      if (!trimmed && raw.length > 0) {
+        wishField.setCustomValidity('Введите пожелание, пожалуйста');
+        return false;
+      }
+      wishField.setCustomValidity('');
+      return Boolean(trimmed || raw.length === 0);
+    };
+
+    wishField?.addEventListener('input', ensureWishValidity);
+
+    const setSubmitting = (state) => {
+      if (!submitBtn) return;
+      submitBtn.disabled = state;
+      submitBtn.classList.toggle('is-busy', state);
+    };
+
+    const submitToGoogle = (formData) => {
+      if (!gformUrl) {
+        return Promise.reject(new Error('Не указан адрес Google-формы для пожеланий'));
+      }
+      const payload = new URLSearchParams();
+      payload.append('fvv', '1');
+      payload.append('pageHistory', '0');
+      const wishValue = (formData.get('wish') || '').toString().trim();
+      payload.append(fieldMap.wish, wishValue);
+      return fetch(gformUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: payload
+      });
+    };
+
+    wishes.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (!ensureWishValidity() || !wishes.reportValidity()) {
+        return;
+      }
+      const formData = new FormData(wishes);
+      showFeedback(feedbackEl, 'Отправляем пожелание...');
+      setSubmitting(true);
+      submitToGoogle(formData)
+        .then(() => {
+          showFeedback(feedbackEl, 'Спасибо за ваши тёплые слова!');
+          if (submitBtn) {
+            const original = submitBtn.textContent;
+            submitBtn.textContent = 'Пожелание отправлено';
+            setTimeout(() => {
+              submitBtn.textContent = original;
+            }, 2200);
+          }
+          wishes.reset();
+          ensureWishValidity();
+        })
+        .catch((err) => {
+          console.error('Не удалось отправить пожелание', err);
+          showFeedback(feedbackEl, 'Не удалось отправить пожелание. Попробуйте ещё раз позже.', true);
         })
         .finally(() => {
           setSubmitting(false);
