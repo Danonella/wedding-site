@@ -10,6 +10,54 @@
   <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body class="font-sans">
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-champagne" viewBox="0 0 48 48">
+      <path class="glass" d="M14 8h6l-1 12h-4z" />
+      <path class="glass" d="M28 8h6l-1 12h-4z" />
+      <path class="glass" d="M17 20v8" />
+      <path class="glass" d="M31 20v8" />
+      <path class="glass" d="M15 28h6" />
+      <path class="glass" d="M29 28h6" />
+      <path class="liquid" d="M15.2 10h3.6l-.6 6h-2.4z" />
+      <path class="liquid" d="M29.2 10h3.6l-.6 6h-2.4z" />
+    </symbol>
+    <symbol id="icon-wine" viewBox="0 0 48 48">
+      <path class="glass" d="M14 12c0-6 4-10 10-10s10 4 10 10v6c0 6-5 12-10 12s-10-6-10-12z" />
+      <path class="glass" d="M24 30v8" />
+      <path class="glass" d="M18 38h12" />
+      <path class="liquid" d="M14 12h20v6c0 5.5-5 10-10 10s-10-4.5-10-10z" />
+    </symbol>
+    <symbol id="icon-tumbler" viewBox="0 0 48 48">
+      <path class="glass" d="M12 10h24l-3 24H15z" />
+      <path class="glass" d="M20 34v4" />
+      <path class="glass" d="M28 34v4" />
+      <path class="liquid" d="M15.5 18h17l-2.2 12h-12.6z" />
+    </symbol>
+    <symbol id="icon-shot" viewBox="0 0 48 48">
+      <path class="glass" d="M16 10h16l-3 22H19z" />
+      <path class="glass" d="M22 32v6" />
+      <path class="glass" d="M26 32v6" />
+      <path class="liquid" d="M18.5 15h11l-1.8 11h-7.4z" />
+    </symbol>
+    <symbol id="icon-cocktail" viewBox="0 0 48 48">
+      <path class="glass" d="M12 10h24L26 24v12h-4V24z" />
+      <path class="glass" d="M20 36h8" />
+      <path class="glass" d="M30 10l4-4" />
+      <circle class="glass" cx="36" cy="6" r="2" />
+      <path class="liquid" d="M16 12h16l-8 9z" />
+    </symbol>
+    <symbol id="icon-snifter" viewBox="0 0 48 48">
+      <path class="glass" d="M14 12c0-5.5 4.5-10 10-10s10 4.5 10 10c0 7-5 13-10 13s-10-6-10-13z" />
+      <path class="glass" d="M24 25v7" />
+      <path class="glass" d="M18 32h12" />
+      <path class="liquid" d="M14 12h20c0 4-5 8-10 8s-10-4-10-8z" />
+    </symbol>
+    <symbol id="icon-leaf" viewBox="0 0 48 48">
+      <path class="liquid" d="M24 6c10 0 16 7 16 18 0 10-6.5 18-16 18S8 34 8 24C8 13 14 6 24 6z" />
+      <path class="glass" d="M24 12c4 6 4 18 0 24" />
+      <path class="glass" d="M14 24c4 0 8 2 10 6" />
+    </symbol>
+  </svg>
   <!-- 1) HERO: имена, дата и фото с диагональным срезом справа -->
   <header id="home" class="section hero wash-top">
     <div class="container hero-grid">
@@ -152,9 +200,25 @@
     </section>
 
     <section id="wishlist" class="section wishlist" data-reveal>
-      <div class="container">
-        <h2 class="section-title">Пожелания</h2>
-        <p>Ваше присутствие — главный подарок! Если хотите порадовать нас дополнительно, мы будем счастливы впечатлениям, открыткам с тёплыми словами и любым знакам внимания, которые сделают день особенным.</p>
+      <div class="container wishlist-layout">
+        <div class="wishlist-text">
+          <h2 class="section-title">Пожелания</h2>
+          <p>Ваше присутствие — главный подарок! Если хотите порадовать нас дополнительно, мы будем счастливы впечатлениям, открыткам с тёплыми словами и любым знакам внимания, которые сделают день особенным.</p>
+          <p>А ещё нам очень дороги ваши слова. Напишите пожелание заранее — мы обязательно прочитаем его вместе в подготовке к празднику.</p>
+        </div>
+        <div class="wishlist-form-card">
+          <h3>Поделитесь теплом</h3>
+          <form class="wishes-form" novalidate data-gform="https://docs.google.com/forms/d/e/1FAIpQLSd_1MMAKMe-fnirbhuG_WF9YZBeX0TXyExk95DerAQrVOERXQ/formResponse">
+            <label>
+              <span>Ваше пожелание</span>
+              <textarea name="wish" rows="4" placeholder="Напишите пару тёплых слов или поделитесь воспоминанием" required></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn">Отправить пожелание</button>
+            </div>
+            <p class="form-feedback" id="wishes-feedback" aria-live="polite"></p>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -222,45 +286,95 @@
             <legend>Что предпочитаете из напитков?</legend>
             <p class="fieldset-hint">Можно выбрать несколько вариантов</p>
             <div class="drink-grid">
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="champagne">
                 <input type="checkbox" name="drinks" value="Шампанское" />
-                <span>Шампанское</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-champagne"></use>
+                  </svg>
+                  <span class="pill-text">Шампанское</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="white-dry">
                 <input type="checkbox" name="drinks" value="Белое полусухое" />
-                <span>Белое полусухое</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-wine"></use>
+                  </svg>
+                  <span class="pill-text">Белое полусухое</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="white-sweet">
                 <input type="checkbox" name="drinks" value="Белое полусладкое" />
-                <span>Белое полусладкое</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-wine"></use>
+                  </svg>
+                  <span class="pill-text">Белое полусладкое</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="red-dry">
                 <input type="checkbox" name="drinks" value="Красное полусухое" />
-                <span>Красное полусухое</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-wine"></use>
+                  </svg>
+                  <span class="pill-text">Красное полусухое</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="red-sweet">
                 <input type="checkbox" name="drinks" value="Красное полусладкое" />
-                <span>Красное полусладкое</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-wine"></use>
+                  </svg>
+                  <span class="pill-text">Красное полусладкое</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="whiskey">
                 <input type="checkbox" name="drinks" value="Виски" />
-                <span>Виски</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-tumbler"></use>
+                  </svg>
+                  <span class="pill-text">Виски</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="vodka">
                 <input type="checkbox" name="drinks" value="Водка" />
-                <span>Водка</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-shot"></use>
+                  </svg>
+                  <span class="pill-text">Водка</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="gin">
                 <input type="checkbox" name="drinks" value="Джин" />
-                <span>Джин</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-cocktail"></use>
+                  </svg>
+                  <span class="pill-text">Джин</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="cognac">
                 <input type="checkbox" name="drinks" value="Коньяк" />
-                <span>Коньяк</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-snifter"></use>
+                  </svg>
+                  <span class="pill-text">Коньяк</span>
+                </span>
               </label>
-              <label class="choice-pill">
+              <label class="choice-pill" data-drink="soft">
                 <input type="checkbox" name="drinks" value="Безалкогольные" />
-                <span>Безалкогольные</span>
+                <span class="pill-visual">
+                  <svg class="pill-icon" aria-hidden="true">
+                    <use href="#icon-leaf"></use>
+                  </svg>
+                  <span class="pill-text">Безалкогольные</span>
+                </span>
               </label>
             </div>
             <label class="choice-extra">
@@ -275,10 +389,6 @@
           <div class="form-actions">
             <button type="submit" class="btn">Отправить</button>
           </div>
-          <p class="form-storage">
-            <strong>Ответы отправляются в Google-форму</strong>
-            <span class="storage-note">После отправки вы можете закрыть страницу — всё уже сохранено.</span>
-          </p>
           <p class="form-feedback" id="rsvp-feedback" aria-live="polite"></p>
         </form>
       </div>
