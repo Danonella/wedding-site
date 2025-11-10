@@ -48,87 +48,104 @@ window.Wedding.gallery = {
     const front = current;
     const back = buffer;
 
-    const setActive = (imgEl, src) => {
-      if(!src) return;
+    const setSource = (imgEl, src) => {
+      if(!imgEl || !src) return;
+      if(imgEl.getAttribute('data-src') === src) return;
       imgEl.setAttribute('data-src', src);
       imgEl.src = src;
     };
 
-    const runTransition = (nextSrc) => {
-      let finished = false;
-      let fallbackTimer = null;
+    const showInitial = this.photos[0];
+    let active = front;
+    let standby = back;
+    let isTransitioning = false;
 
-      const finish = () => {
-        if(finished) return;
-        finished = true;
-        back.removeEventListener('transitionend', onEnd);
-        if(fallbackTimer){
-          window.clearTimeout(fallbackTimer);
-        }
-        setActive(front, nextSrc);
-        requestAnimationFrame(() => {
-          front.classList.add('is-visible');
-          back.classList.remove('is-visible');
-        });
-        back.removeAttribute('data-src');
-        back.removeAttribute('src');
-      };
-
-      const onEnd = (event) => {
-        if(event.target === back && event.propertyName === 'opacity'){
-          finish();
-        }
-      };
-
-      back.addEventListener('transitionend', onEnd);
-      fallbackTimer = window.setTimeout(finish, 1800);
-
-      requestAnimationFrame(() => {
-        front.classList.remove('is-visible');
-        requestAnimationFrame(() => {
-          back.classList.add('is-visible');
-        });
-      });
+    const makeVisible = (imgEl) => {
+      if(!imgEl) return;
+      imgEl.classList.add('is-visible');
+      imgEl.removeAttribute('aria-hidden');
     };
 
+    const makeHidden = (imgEl) => {
+      if(!imgEl) return;
+      imgEl.classList.remove('is-visible');
+      imgEl.setAttribute('aria-hidden', 'true');
+    };
+
+    if(showInitial){
+      setSource(active, showInitial);
+      makeVisible(active);
+      this.index = 0;
+    }
+    makeHidden(standby);
+    standby.removeAttribute('data-src');
+    standby.removeAttribute('src');
+
     const show = (i) => {
-      if(!this.photos.length) return;
-      this.index = (i + this.photos.length) % this.photos.length;
-      const nextSrc = this.photos[this.index];
-      if(front.getAttribute('data-src') === nextSrc){
+      if(!this.photos.length || isTransitioning) return;
+      const normalized = (i + this.photos.length) % this.photos.length;
+      const nextSrc = this.photos[normalized];
+      if(!nextSrc || active.getAttribute('data-src') === nextSrc){
+        this.index = normalized;
         return;
       }
-      back.onload = null;
 
-      const startSwap = () => {
+      standby.onload = null;
+      const beginSwap = () => {
+        isTransitioning = true;
+        const upcoming = standby;
+        const currentActive = active;
+
+        let fallbackTimer = null;
+        const finalize = (event) => {
+          if(event && (event.target !== upcoming || event.propertyName !== 'opacity')){
+            return;
+          }
+          upcoming.removeEventListener('transitionend', finalize);
+          if(fallbackTimer){
+            window.clearTimeout(fallbackTimer);
+          }
+          upcoming.onload = null;
+          standby = currentActive;
+          active = upcoming;
+          this.index = normalized;
+          isTransitioning = false;
+        };
+
         if(this._motionQuery && this._motionQuery.matches){
-          setActive(front, nextSrc);
-          front.classList.add('is-visible');
-          back.classList.remove('is-visible');
-          back.removeAttribute('data-src');
-          back.removeAttribute('src');
+          makeHidden(currentActive);
+          makeVisible(upcoming);
+          upcoming.onload = null;
+          standby = currentActive;
+          active = upcoming;
+          this.index = normalized;
+          isTransitioning = false;
           return;
         }
-        runTransition(nextSrc);
+
+        fallbackTimer = window.setTimeout(() => finalize(), 1200);
+        upcoming.addEventListener('transitionend', finalize);
+
+        requestAnimationFrame(() => {
+          makeVisible(upcoming);
+          makeHidden(currentActive);
+        });
       };
 
-      setActive(back, nextSrc);
-      if(back.complete){
-        startSwap();
+      const prepare = () => {
+        beginSwap();
+      };
+
+      setSource(standby, nextSrc);
+      if(standby.complete && standby.naturalWidth){
+        prepare();
       } else {
-        back.onload = () => {
-          back.onload = null;
-          startSwap();
+        standby.onload = () => {
+          standby.onload = null;
+          prepare();
         };
       }
     };
-
-    setActive(front, this.photos[0]);
-    front.classList.add('is-visible');
-    this.index = 0;
-    back.removeAttribute('data-src');
-    back.removeAttribute('src');
-    back.classList.remove('is-visible');
 
     const start = () => {
       if(this.timer || (this._motionQuery && this._motionQuery.matches)) return;
