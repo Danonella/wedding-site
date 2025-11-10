@@ -795,34 +795,113 @@ img {
   position: relative;
   border-radius: 20px;
   box-shadow: 0 14px 30px var(--shadow-soft);
-  overflow: hidden;
   min-height: 200px;
   aspect-ratio: 3 / 4;
+  background: none;
+  overflow: hidden;
+  transition: box-shadow 260ms ease;
 }
 
-.dresscode-example img {
+.dresscode-example.is-flippable {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  display: block;
+  background: none;
+  perspective: 1100px;
+  overflow: visible;
+}
+
+.dresscode-example.is-flippable:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--tone, var(--c-teal)) 45%, white);
+  outline-offset: 6px;
+}
+
+.dresscode-example.is-flippable .dresscode-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 640ms cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: inset 0 1px 12px rgba(255, 255, 255, 0.28);
+}
+
+.dresscode-example.is-flippable.is-flipped .dresscode-flip {
+  transform: rotateY(180deg);
+}
+
+.dresscode-example.is-flippable .dresscode-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  backface-visibility: hidden;
+}
+
+.dresscode-face-front {
+  background: var(--tone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dresscode-face-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.dresscode-face-back {
+  transform: rotateY(180deg);
+  background: var(--glass);
+}
+
+.dresscode-face-back img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.dresscode-example.is-color {
-  background: var(--tone);
-  box-shadow: inset 0 1px 12px rgba(255, 255, 255, 0.32), 0 14px 30px var(--shadow-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.dresscode-example:not(.is-flippable) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.dresscode-example.is-color::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
-  mix-blend-mode: screen;
-  pointer-events: none;
+@media (hover: hover) and (pointer: fine) {
+  .dresscode-example.is-flippable:hover .dresscode-flip {
+    transform: translateY(-4px) rotateY(var(--flip-angle, 0deg));
+  }
+
+  .dresscode-example.is-flippable:hover {
+    box-shadow: 0 18px 36px color-mix(in srgb, var(--tone, var(--c-teal)) 30%, rgba(0, 0, 0, 0.12));
+  }
+}
+
+.dresscode-example.is-flippable.is-flipped:hover .dresscode-flip {
+  --flip-angle: 180deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dresscode-example.is-flippable .dresscode-flip {
+    transition-duration: 0.01ms;
+  }
+
+  .dresscode-example.is-flippable:hover .dresscode-flip {
+    transform: rotateY(var(--flip-angle, 0deg));
+  }
 }
 
 /* ====== COUNTDOWN ====== */
