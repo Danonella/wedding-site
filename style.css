@@ -37,7 +37,7 @@ body {
 
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
   background:
@@ -46,9 +46,10 @@ body::before {
     radial-gradient(240px 280px at 18% 78%, color-mix(in srgb, var(--c-teal) 26%, transparent) 0, transparent 100%),
     radial-gradient(200px 240px at 88% 72%, color-mix(in srgb, var(--c-coral) 28%, transparent) 0, transparent 100%),
     radial-gradient(220px 300px at 50% 52%, color-mix(in srgb, var(--c-lime) 22%, transparent) 0, transparent 100%);
-  opacity: 0.45;
-  mix-blend-mode: multiply;
+  opacity: 0.32;
   z-index: -1;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
 }
 
 img {
@@ -61,8 +62,14 @@ img {
 }
 
 .container {
-  width: min(1200px, 90%);
+  width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
+}
+
+@media (max-width: 520px) {
+  .container {
+    width: calc(100% - 32px);
+  }
 }
 
 .section-title {
@@ -103,12 +110,12 @@ img {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(300px, 0.85fr) minmax(420px, 1.25fr);
+  grid-template-columns: minmax(320px, 0.95fr) minmax(520px, 1.45fr);
   align-items: center;
   gap: clamp(32px, 5vw, 96px);
-  width: min(1200px, 100%);
+  width: min(1320px, 100%);
   margin: 0 auto;
-  padding-inline: clamp(24px, 6vw, 120px);
+  padding-inline: clamp(24px, 6vw, 96px);
 }
 
 .hero-text {
@@ -180,11 +187,12 @@ img {
   border-radius: 0;
   clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%, 0% 16%);
   box-shadow: -24px 24px 60px var(--shadow-soft);
+  min-height: clamp(360px, 42vw, 620px);
 }
 
 .hero-photo img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
   object-position: center 45%;
   aspect-ratio: 4 / 3;
@@ -276,10 +284,12 @@ img {
 
   .hero-photo {
     clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%, 0% 20%);
+    min-height: auto;
   }
 
   .hero-photo img {
     aspect-ratio: auto;
+    min-height: 0;
   }
 }
 
@@ -1025,10 +1035,10 @@ img {
   content: "";
   position: absolute;
   border-radius: 50%;
-  mix-blend-mode: screen;
-  opacity: 0.3;
+  opacity: 0.26;
   pointer-events: none;
   animation: float-sway 18s ease-in-out infinite;
+  will-change: transform;
 }
 
 .rsvp-card::before {
