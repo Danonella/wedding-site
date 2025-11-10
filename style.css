@@ -84,10 +84,16 @@ img {
 .hero::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--c-coral) 28%, transparent), transparent 70%), radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--c-lime) 24%, transparent), transparent 65%);
-  opacity: 0.55;
+  inset: -18% -12% -46%;
+  background:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--c-coral) 28%, transparent) 0, transparent 70%),
+    radial-gradient(circle at 80% 78%, color-mix(in srgb, var(--c-lime) 22%, transparent) 0, transparent 68%);
+  opacity: 0.38;
   z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 8%, rgba(0, 0, 0, 0.8) 58%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92) 8%, rgba(0, 0, 0, 0.8) 58%, rgba(0, 0, 0, 0) 100%);
 }
 
 .hero-grid {
@@ -464,6 +470,7 @@ img {
   transform: scale(1.035);
   transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), transform 7s ease;
   will-change: opacity, transform;
+  background-color: color-mix(in srgb, white 85%, var(--c-soft) 15%);
 }
 
 .gallery-frame img.is-visible {
@@ -788,7 +795,7 @@ img {
 @media (max-width: 640px) {
   .countdown-grid {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: stretch;
     gap: 12px;
   }
@@ -971,6 +978,22 @@ img {
   color: var(--c-deep);
 }
 
+.rsvp-form select {
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.95);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath fill='%2365B6BF' d='M1.2 0h11.6c.9 0 1.4 1.1.8 1.8L7.8 9.3a1 1 0 0 1-1.6 0L.4 1.8C-.2 1.1.3 0 1.2 0Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 14px auto;
+  padding-right: 48px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.rsvp-form select::-ms-expand {
+  display: none;
+}
+
 .rsvp-form input:focus,
 .rsvp-form select:focus,
 .rsvp-form textarea:focus,
@@ -983,19 +1006,24 @@ img {
 .rsvp-form fieldset {
   border: 1px solid color-mix(in srgb, var(--c-teal) 22%, transparent);
   border-radius: 18px;
-  padding: 18px 20px 14px;
+  padding: 24px 22px 18px;
   display: grid;
   gap: 12px;
   background: color-mix(in srgb, white 88%, var(--c-aqua) 12%);
 }
 
 .rsvp-form legend {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 0;
   font-family: "Inter", sans-serif;
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--c-deep) 60%, white);
-  padding: 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--c-deep);
+  line-height: 1.4;
 }
 
 .drink-fieldset {
