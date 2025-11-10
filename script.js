@@ -266,49 +266,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const palette = document.querySelector('.dresscode-palette');
   const examples = document.getElementById('dresscode-examples');
   if (palette && examples) {
-    const toneToPhoto = {
-      '#A4B6C6': 'blue-color-1',
-      '#AABAD4': 'blue-color-2',
-      '#063759': 'blue-color-3',
-      '#141743': 'blue-color-4',
-      '#C8AFCC': 'purple-color-4',
-      '#9387AB': 'purple-color-3',
-      '#735577': 'purple-color-2',
-      '#44354D': 'purple-color-1',
-      '#A7DAB5': 'green-color-2',
-      '#84C76F': 'green-color-1',
-      '#488F4F': 'green-color-4',
-      '#455228': 'green-color-3',
-      '#FECFB2': 'peach-color-2',
-      '#FFB386': 'peach-color-1',
-      '#FF833D': 'peach-color-4',
-      '#B35D2B': 'peach-color-3'
-    };
-
     const palettes = {
       green: {
         type: 'color',
         label: 'Зелёный оттенок',
         photoLabel: 'Образ в зелёной палитре',
-        items: ['#A7DAB5', '#84C76F', '#488F4F', '#455228']
+        items: [
+          { tone: '#A7DAB5', name: 'Мята на рассвете', note: 'Льняная рубашка, струящееся платье и светлый костюм.', photo: 'green-color-2' },
+          { tone: '#84C76F', name: 'Садовая свежесть', note: 'Комбинация цвета шалфея и костюм цвета фисташки.', photo: 'green-color-1' },
+          { tone: '#488F4F', name: 'Глубина хвои', note: 'Тёмно-зелёный костюм и сатиновое платье цвета хвои.', photo: 'green-color-4' },
+          { tone: '#455228', name: 'Оливковая ночь', note: 'Бархатный пиджак и шелковое платье в оттенках оливы.', photo: 'green-color-3' }
+        ]
       },
       peach: {
         type: 'color',
         label: 'Тёплый персиковый оттенок',
         photoLabel: 'Образ в персиковой палитре',
-        items: ['#FECFB2', '#FFB386', '#FF833D', '#B35D2B']
+        items: [
+          { tone: '#FECFB2', name: 'Розовый кварц', note: 'Воздушное платье-комбинация и карамельный пиджак.', photo: 'peach-color-2' },
+          { tone: '#FFB386', name: 'Персиковый софт', note: 'Льняной костюм и сарафан миди с вышивкой.', photo: 'peach-color-1' },
+          { tone: '#FF833D', name: 'Апероль на закате', note: 'Костюм-тройка и струящееся платье цвета заката.', photo: 'peach-color-4' },
+          { tone: '#B35D2B', name: 'Пряная корица', note: 'Бархатный пиджак и шелковое платье оттенка корицы.', photo: 'peach-color-3' }
+        ]
       },
       purple: {
         type: 'color',
         label: 'Фиолетовый оттенок',
         photoLabel: 'Образ в фиолетовой палитре',
-        items: ['#C8AFCC', '#9387AB', '#735577', '#44354D']
+        items: [
+          { tone: '#C8AFCC', name: 'Сиреневая дымка', note: 'Тюлевое платье и костюм цвета весенней сирени.', photo: 'purple-color-4' },
+          { tone: '#9387AB', name: 'Лавандовый штрих', note: 'Сатиновое платье и строгий костюм в тон.', photo: 'purple-color-3' },
+          { tone: '#735577', name: 'Сливочный ирис', note: 'Костюм-тройка и топ из шёлка глубокого сливового оттенка.', photo: 'purple-color-2' },
+          { tone: '#44354D', name: 'Спелая ежевика', note: 'Смокинг и бархатное платье цвета ежевики.', photo: 'purple-color-1' }
+        ]
       },
       blue: {
         type: 'color',
         label: 'Голубой оттенок',
         photoLabel: 'Образ в голубой палитре',
-        items: ['#A4B6C6', '#AABAD4', '#063759', '#141743']
+        items: [
+          { tone: '#A4B6C6', name: 'Голубой лёд', note: 'Платье-футляр и клетчатый костюм цвета утреннего неба.', photo: 'blue-color-1' },
+          { tone: '#AABAD4', name: 'Пудровый деним', note: 'Шифоновое платье и структурный костюм из твида.', photo: 'blue-color-2' },
+          { tone: '#063759', name: 'Полуночный индиго', note: 'Глубокий синий костюм и платье с пайетками.', photo: 'blue-color-3' },
+          { tone: '#141743', name: 'Чернильный вельвет', note: 'Смокинг и бархатное платье насыщенного синего оттенка.', photo: 'blue-color-4' }
+        ]
       }
     };
 
@@ -316,19 +317,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const config = palettes[key];
       if (!config) return;
       examples.innerHTML = '';
+      const cards = [];
       config.items.forEach((item, index) => {
         if (config.type === 'color') {
-          const tone = typeof item === 'string' ? item : '';
-          if (!tone) return;
-          const normalizedTone = tone.toUpperCase();
-          const photoName = toneToPhoto[normalizedTone];
-          if (!photoName) return;
+          const tone = typeof item === 'string' ? item : item?.tone;
+          const toneName = typeof item === 'object' ? item?.name : '';
+          const note = typeof item === 'object' ? item?.note : '';
+          const photoName = typeof item === 'object' ? item?.photo : undefined;
+          if (!tone || !photoName) return;
           const block = document.createElement('button');
           block.type = 'button';
           block.className = 'dresscode-example is-flippable';
           block.style.setProperty('--tone', tone);
+          block.style.setProperty('--tone-base', tone);
           block.setAttribute('aria-pressed', 'false');
-          block.setAttribute('aria-label', `${config.label} ${index + 1}`);
+          const ariaName = toneName ? ` — ${toneName}` : '';
+          block.setAttribute('aria-label', `${config.label} ${index + 1}${ariaName}`);
 
           const flip = document.createElement('span');
           flip.className = 'dresscode-flip';
@@ -337,8 +341,30 @@ document.addEventListener('DOMContentLoaded', () => {
           front.className = 'dresscode-face dresscode-face-front';
           const caption = document.createElement('span');
           caption.className = 'visually-hidden';
-          caption.textContent = `${config.label} ${index + 1}: ${tone}`;
+          caption.textContent = `${config.label} ${index + 1}: ${toneName || tone}`;
           front.appendChild(caption);
+
+          const pattern = document.createElement('span');
+          pattern.className = 'dresscode-front-pattern';
+          pattern.setAttribute('aria-hidden', 'true');
+          front.appendChild(pattern);
+
+          if (toneName) {
+            const name = document.createElement('span');
+            name.className = 'dresscode-tone-name';
+            name.textContent = toneName;
+            front.appendChild(name);
+          }
+
+          const chip = document.createElement('span');
+          chip.className = 'dresscode-tone-chip';
+          chip.setAttribute('aria-hidden', 'true');
+          front.appendChild(chip);
+
+          const hint = document.createElement('span');
+          hint.className = 'dresscode-tone-hint';
+          hint.textContent = 'Посмотреть образ';
+          front.appendChild(hint);
 
           const back = document.createElement('span');
           back.className = 'dresscode-face dresscode-face-back';
@@ -351,10 +377,18 @@ document.addEventListener('DOMContentLoaded', () => {
             back.appendChild(img);
           }
 
+          if (note) {
+            const noteEl = document.createElement('span');
+            noteEl.className = 'dresscode-look-note';
+            noteEl.textContent = note;
+            back.appendChild(noteEl);
+          }
+
           flip.appendChild(front);
           flip.appendChild(back);
           block.appendChild(flip);
           examples.appendChild(block);
+          cards.push(block);
         } else if (config.type === 'image') {
           const src = item?.src;
           if (!src) return;
@@ -369,6 +403,15 @@ document.addEventListener('DOMContentLoaded', () => {
           examples.appendChild(wrapper);
         }
       });
+
+      if (cards.length) {
+        requestAnimationFrame(() => {
+          cards.forEach((card, index) => {
+            card.style.setProperty('--card-delay', `${index * 80}ms`);
+            card.classList.add('is-ready');
+          });
+        });
+      }
     };
 
     const setActiveSwatch = (active) => {
@@ -394,6 +437,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!target) return;
       const isNowFlipped = target.classList.toggle('is-flipped');
       target.setAttribute('aria-pressed', String(isNowFlipped));
+      if (isNowFlipped) {
+        const others = examples.querySelectorAll('.dresscode-example.is-flippable.is-flipped');
+        others.forEach((card) => {
+          if (card === target) return;
+          card.classList.remove('is-flipped');
+          card.setAttribute('aria-pressed', 'false');
+        });
+      }
     });
 
     const initial = palette.querySelector('.swatch[data-palette]');
