@@ -971,11 +971,13 @@ img {
   width: 100%;
   padding: 14px 16px;
   border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--c-teal) 25%, transparent);
+  border: none;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-teal) 28%, transparent);
   background: rgba(255, 255, 255, 0.9);
   font-family: "Inter", sans-serif;
   font-size: 16px;
   color: var(--c-deep);
+  background-clip: padding-box;
 }
 
 .rsvp-form select {
@@ -999,8 +1001,9 @@ img {
 .rsvp-form textarea:focus,
 .wishes-form textarea:focus {
   outline: none;
-  border-color: var(--c-coral);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-coral) 35%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--c-coral) 60%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--c-coral) 32%, transparent);
 }
 
 .rsvp-form fieldset {
@@ -1015,15 +1018,15 @@ img {
 .rsvp-form legend {
   display: block;
   width: 100%;
-  margin: 0 0 10px;
-  padding: 0;
+  margin: 0 0 12px;
+  padding: 8px 0 0;
   font-family: "Inter", sans-serif;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 400;
   letter-spacing: 0.04em;
   text-transform: none;
-  color: var(--c-deep);
-  line-height: 1.4;
+  color: var(--text-muted);
+  line-height: 1.45;
 }
 
 .drink-fieldset {
