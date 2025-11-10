@@ -266,25 +266,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const palette = document.querySelector('.dresscode-palette');
   const examples = document.getElementById('dresscode-examples');
   if (palette && examples) {
+    const toneToPhoto = {
+      '#A4B6C6': 'blue-color-1',
+      '#AABAD4': 'blue-color-2',
+      '#063759': 'blue-color-3',
+      '#141743': 'blue-color-4',
+      '#C8AFCC': 'purple-color-4',
+      '#9387AB': 'purple-color-3',
+      '#735577': 'purple-color-2',
+      '#44354D': 'purple-color-1',
+      '#A7DAB5': 'green-color-2',
+      '#84C76F': 'green-color-1',
+      '#488F4F': 'green-color-4',
+      '#455228': 'green-color-3',
+      '#FECFB2': 'peach-color-2',
+      '#FFB386': 'peach-color-1',
+      '#FF833D': 'peach-color-4',
+      '#B35D2B': 'peach-color-3'
+    };
+
     const palettes = {
       green: {
         type: 'color',
         label: 'Зелёный оттенок',
+        photoLabel: 'Образ в зелёной палитре',
         items: ['#A7DAB5', '#84C76F', '#488F4F', '#455228']
       },
       peach: {
         type: 'color',
         label: 'Тёплый персиковый оттенок',
+        photoLabel: 'Образ в персиковой палитре',
         items: ['#FECFB2', '#FFB386', '#FF833D', '#B35D2B']
       },
       purple: {
         type: 'color',
         label: 'Фиолетовый оттенок',
+        photoLabel: 'Образ в фиолетовой палитре',
         items: ['#C8AFCC', '#9387AB', '#735577', '#44354D']
       },
       blue: {
         type: 'color',
         label: 'Голубой оттенок',
+        photoLabel: 'Образ в голубой палитре',
         items: ['#A4B6C6', '#AABAD4', '#063759', '#141743']
       }
     };
@@ -297,13 +320,40 @@ document.addEventListener('DOMContentLoaded', () => {
         if (config.type === 'color') {
           const tone = typeof item === 'string' ? item : '';
           if (!tone) return;
-          const block = document.createElement('div');
-          block.className = 'dresscode-example is-color';
+          const normalizedTone = tone.toUpperCase();
+          const photoName = toneToPhoto[normalizedTone];
+          if (!photoName) return;
+          const block = document.createElement('button');
+          block.type = 'button';
+          block.className = 'dresscode-example is-flippable';
           block.style.setProperty('--tone', tone);
+          block.setAttribute('aria-pressed', 'false');
+          block.setAttribute('aria-label', `${config.label} ${index + 1}`);
+
+          const flip = document.createElement('span');
+          flip.className = 'dresscode-flip';
+
+          const front = document.createElement('span');
+          front.className = 'dresscode-face dresscode-face-front';
           const caption = document.createElement('span');
           caption.className = 'visually-hidden';
           caption.textContent = `${config.label} ${index + 1}: ${tone}`;
-          block.appendChild(caption);
+          front.appendChild(caption);
+
+          const back = document.createElement('span');
+          back.className = 'dresscode-face dresscode-face-back';
+          if (photoName) {
+            const img = document.createElement('img');
+            img.src = `photos/${photoName}.jpg`;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.alt = `${config.photoLabel ?? config.label} ${index + 1}`;
+            back.appendChild(img);
+          }
+
+          flip.appendChild(front);
+          flip.appendChild(back);
+          block.appendChild(flip);
           examples.appendChild(block);
         } else if (config.type === 'image') {
           const src = item?.src;
@@ -337,6 +387,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!key || !(key in palettes)) return;
       setActiveSwatch(button);
       renderPalette(key);
+    });
+
+    examples.addEventListener('click', (event) => {
+      const target = event.target instanceof HTMLElement ? event.target.closest('.dresscode-example.is-flippable') : null;
+      if (!target) return;
+      const isNowFlipped = target.classList.toggle('is-flipped');
+      target.setAttribute('aria-pressed', String(isNowFlipped));
     });
 
     const initial = palette.querySelector('.swatch[data-palette]');
