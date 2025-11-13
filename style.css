@@ -894,6 +894,7 @@ img {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  justify-items: center;
 }
 
 .dresscode-example {
@@ -1047,13 +1048,13 @@ img {
 
 @media (hover: hover) and (pointer: fine) {
   .dresscode-card:hover .color-card-inner {
-    transform: translateY(-6px) rotateY(180deg);
+    transform: rotateY(180deg);
     box-shadow: 0 28px 60px color-mix(in srgb, var(--tone-base, var(--c-teal)) 30%, rgba(12, 37, 45, 0.36));
   }
 }
 
 .dresscode-card:focus-visible .color-card-inner {
-  transform: translateY(-6px) rotateY(180deg);
+  transform: rotateY(180deg);
   box-shadow: 0 28px 60px color-mix(in srgb, var(--tone-base, var(--c-teal)) 30%, rgba(12, 37, 45, 0.36));
 }
 
