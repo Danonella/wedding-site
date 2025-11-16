@@ -341,6 +341,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!config) return;
       examples.innerHTML = '';
       const cards = [];
+      const createFlipHint = () => {
+        const hint = document.createElement('span');
+        hint.className = 'flip-hint';
+        hint.setAttribute('aria-hidden', 'true');
+        hint.innerHTML = `
+          <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
+            <path d="M6.8 10.2a.9.9 0 0 0-1.3 0L3 12.7l2.5 2.5a.9.9 0 0 0 1.3-1.3l-.9-.9h5.5a3.4 3.4 0 0 1 3.3 3.3v.4a.9.9 0 1 0 1.8 0v-.4a5.2 5.2 0 0 0-5.1-5.1H5.9l.9-.9a.9.9 0 0 0 0-1.3Zm11.2 1a.9.9 0 0 0-1.3 1.3l.9.9h-5.4A3.4 3.4 0 0 1 9 10.1v-.4a.9.9 0 0 0-1.8 0v.4a5.2 5.2 0 0 0 5.1 5.1h5.4l-.9.9a.9.9 0 1 0 1.3 1.3l2.5-2.5Z" fill="currentColor"/>
+          </svg>
+        `;
+        return hint;
+      };
+
       config.items.forEach((item, index) => {
         if (config.type === 'color') {
           const tone = typeof item === 'string' ? item : item?.tone;
@@ -365,18 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
           caption.className = 'visually-hidden';
           caption.textContent = `${config.label} ${index + 1}: ${toneName || tone}`;
           front.appendChild(caption);
-
-          const chip = document.createElement('span');
-          chip.className = 'dresscode-tone-chip';
-          chip.setAttribute('aria-hidden', 'true');
-          front.appendChild(chip);
-
-          if (toneName || tone) {
-            const title = document.createElement('span');
-            title.className = 'dresscode-tone-name';
-            title.textContent = toneName || tone;
-            front.appendChild(title);
-          }
+          front.appendChild(createFlipHint());
 
           const back = document.createElement('div');
           back.className = 'color-card-face color-card-back';
@@ -398,6 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.alt = alt;
             back.appendChild(img);
           }
+          back.appendChild(createFlipHint());
 
           inner.appendChild(front);
           inner.appendChild(back);
@@ -458,14 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!target) return;
       const isNowFlipped = target.classList.toggle('is-flipped');
       target.setAttribute('aria-pressed', String(isNowFlipped));
-      if (isNowFlipped) {
-        const others = examples.querySelectorAll('.dresscode-card.is-flipped');
-        others.forEach((card) => {
-          if (card === target) return;
-          card.classList.remove('is-flipped');
-          card.setAttribute('aria-pressed', 'false');
-        });
-      }
     });
 
     examples.addEventListener('pointerdown', (event) => {
