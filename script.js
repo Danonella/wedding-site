@@ -341,15 +341,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!config) return;
       examples.innerHTML = '';
       const cards = [];
-      const createFlipHint = () => {
-        const hint = document.createElement('span');
+      const flipIcon = `
+        <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
+          <path d="M7.2 6.2A6 6 0 0 1 17.4 9h1.1a.65.65 0 0 1 .46 1.1l-2.38 2.38a.65.65 0 0 1-.92 0L13.28 10.7a.65.65 0 0 1 .46-1.1h1.04A4.7 4.7 0 0 0 8 8.5a.65.65 0 1 1-.8-1.03Z" fill="currentColor"/>
+          <path d="M16.8 17.8A6 6 0 0 1 6.6 15.1H5.5a.65.65 0 0 1-.46-1.1L7.42 11.6a.65.65 0 0 1 .92 0l2.38 2.38a.65.65 0 0 1-.46 1.1H9.22a4.7 4.7 0 0 0 6.78 1.1.65.65 0 0 1 .8 1.02Z" fill="currentColor"/>
+        </svg>
+      `;
+
+      const createFlipHint = (side) => {
+        const hint = document.createElement('button');
+        hint.type = 'button';
         hint.className = 'flip-hint';
-        hint.setAttribute('aria-hidden', 'true');
-        hint.innerHTML = `
-          <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
-            <path d="M6.8 10.2a.9.9 0 0 0-1.3 0L3 12.7l2.5 2.5a.9.9 0 0 0 1.3-1.3l-.9-.9h5.5a3.4 3.4 0 0 1 3.3 3.3v.4a.9.9 0 1 0 1.8 0v-.4a5.2 5.2 0 0 0-5.1-5.1H5.9l.9-.9a.9.9 0 0 0 0-1.3Zm11.2 1a.9.9 0 0 0-1.3 1.3l.9.9h-5.4A3.4 3.4 0 0 1 9 10.1v-.4a.9.9 0 0 0-1.8 0v.4a5.2 5.2 0 0 0 5.1 5.1h5.4l-.9.9a.9.9 0 1 0 1.3 1.3l2.5-2.5Z" fill="currentColor"/>
-          </svg>
-        `;
+        hint.dataset.side = side;
+        const target = side === 'front' ? 'back' : 'front';
+        hint.dataset.flip = target;
+        hint.setAttribute('aria-label', target === 'back' ? 'Посмотреть пример образа' : 'Вернуться к палитре');
+        hint.innerHTML = flipIcon;
         return hint;
       };
 
@@ -359,11 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const toneName = typeof item === 'object' ? item?.name : '';
           const photoName = typeof item === 'object' ? item?.photo : undefined;
           if (!tone || !photoName) return;
-          const block = document.createElement('button');
-          block.type = 'button';
+          const block = document.createElement('article');
           block.className = 'color-card dresscode-card';
           block.style.setProperty('--tone', tone);
           block.style.setProperty('--tone-base', tone);
+          block.setAttribute('role', 'button');
+          block.tabIndex = 0;
           block.setAttribute('aria-pressed', 'false');
           const ariaName = toneName ? ` — ${toneName}` : '';
           block.setAttribute('aria-label', `${config.label} ${index + 1}${ariaName}`);
@@ -377,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
           caption.className = 'visually-hidden';
           caption.textContent = `${config.label} ${index + 1}: ${toneName || tone}`;
           front.appendChild(caption);
-          front.appendChild(createFlipHint());
+          front.appendChild(createFlipHint('front'));
 
           const back = document.createElement('div');
           back.className = 'color-card-face color-card-back';
@@ -399,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.alt = alt;
             back.appendChild(img);
           }
-          back.appendChild(createFlipHint());
+          back.appendChild(createFlipHint('back'));
 
           inner.appendChild(front);
           inner.appendChild(back);
@@ -455,18 +463,33 @@ document.addEventListener('DOMContentLoaded', () => {
       createRipple(button, event);
     });
 
+    const setCardFlipped = (card, shouldFlip) => {
+      if (!card) return;
+      const isFlipped = Boolean(shouldFlip);
+      card.classList.toggle('is-flipped', isFlipped);
+      card.setAttribute('aria-pressed', String(isFlipped));
+    };
+
     examples.addEventListener('click', (event) => {
+      const hint = event.target instanceof HTMLElement ? event.target.closest('.flip-hint') : null;
+      if (hint) {
+        event.stopPropagation();
+        const card = hint.closest('.dresscode-card');
+        if (!card) return;
+        setCardFlipped(card, hint.dataset.flip === 'back');
+        return;
+      }
       const target = event.target instanceof HTMLElement ? event.target.closest('.dresscode-card') : null;
       if (!target) return;
-      const isNowFlipped = target.classList.toggle('is-flipped');
-      target.setAttribute('aria-pressed', String(isNowFlipped));
+      setCardFlipped(target, !target.classList.contains('is-flipped'));
     });
 
-    examples.addEventListener('pointerdown', (event) => {
-      const target = event.target instanceof HTMLElement ? event.target.closest('.dresscode-card') : null;
-      if (!target) return;
-      const surface = target.querySelector('.color-card-inner');
-      createRipple(surface || target, event);
+    examples.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') return;
+      const card = event.target instanceof HTMLElement ? event.target.closest('.dresscode-card') : null;
+      if (!card || event.target !== card) return;
+      event.preventDefault();
+      setCardFlipped(card, !card.classList.contains('is-flipped'));
     });
 
     const initial = palette.querySelector('.swatch[data-palette]');
